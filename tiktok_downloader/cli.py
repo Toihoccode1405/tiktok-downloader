@@ -11,20 +11,49 @@ def clear_screen():
     """Xóa màn hình terminal"""
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def print_banner():
-    """Hiển thị banner đẹp mắt khi khởi động ứng dụng"""
-    terminal_width = shutil.get_terminal_size().columns
-    banner_width = 60
-    padding = max(0, (terminal_width - banner_width) // 2)
+def get_terminal_width():
+    """Lấy chiều rộng của terminal và đảm bảo giá trị hợp lý"""
+    try:
+        width = shutil.get_terminal_size().columns
+        return max(80, min(width, 120))  # Giới hạn trong khoảng 80-120
+    except:
+        return 80  # Mặc định nếu không lấy được kích thước
+
+def center_text(text, width=None, fill_char=' '):
+    """Căn giữa văn bản trong terminal"""
+    if width is None:
+        width = get_terminal_width()
+    padding = max(0, (width - len(text)) // 2)
+    return fill_char * padding + text + fill_char * padding
+
+def print_modern_logo():
+    """Hiển thị logo TikTok với phong cách hiện đại"""
+    terminal_width = get_terminal_width()
     
+    logo = [
+        f"{Fore.CYAN}  ████████╗{Fore.MAGENTA}██╗{Fore.WHITE}██╗  ██╗{Fore.CYAN}████████╗{Fore.MAGENTA}██████╗ {Fore.WHITE}██╗  ██╗{Style.RESET_ALL}",
+        f"{Fore.CYAN}  ╚══██╔══╝{Fore.MAGENTA}██║{Fore.WHITE}██║ ██╔╝{Fore.CYAN}╚══██╔══╝{Fore.MAGENTA}██╔══██╗{Fore.WHITE}██║ ██╔╝{Style.RESET_ALL}",
+        f"{Fore.CYAN}     ██║   {Fore.MAGENTA}██║{Fore.WHITE}█████╔╝ {Fore.CYAN}   ██║   {Fore.MAGENTA}██║  ██║{Fore.WHITE}█████╔╝ {Style.RESET_ALL}",
+        f"{Fore.CYAN}     ██║   {Fore.MAGENTA}██║{Fore.WHITE}██╔═██╗ {Fore.CYAN}   ██║   {Fore.MAGENTA}██║  ██║{Fore.WHITE}██╔═██╗ {Style.RESET_ALL}",
+        f"{Fore.CYAN}     ██║   {Fore.MAGENTA}██║{Fore.WHITE}██║  ██╗{Fore.CYAN}   ██║   {Fore.MAGENTA}██████╔╝{Fore.WHITE}██║  ██╗{Style.RESET_ALL}",
+        f"{Fore.CYAN}     ╚═╝   {Fore.MAGENTA}╚═╝{Fore.WHITE}╚═╝  ╚═╝{Fore.CYAN}   ╚═╝   {Fore.MAGENTA}╚═════╝ {Fore.WHITE}╚═╝  ╚═╝{Style.RESET_ALL}"
+    ]
+    
+    print("\n")
+    for line in logo:
+        print(center_text(line, terminal_width))
+            
+    print("\n")
+    print(center_text(f"{Fore.GREEN}▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅{Style.RESET_ALL}", terminal_width))
+    print(center_text(f"{Fore.YELLOW}⚡ VIDEO DOWNLOADER ⚡{Style.RESET_ALL}", terminal_width))
+    print(center_text(f"{Fore.GREEN}▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅{Style.RESET_ALL}", terminal_width))
+    print("\n")
+
+def print_banner():
+    """Hiển thị banner hiện đại khi khởi động ứng dụng"""
+    terminal_width = get_terminal_width()
     clear_screen()
-    print("\n" + " " * padding + f"{Fore.CYAN}╔{'═' * 58}╗{Style.RESET_ALL}")
-    print(" " * padding + f"{Fore.CYAN}║{Style.RESET_ALL}{Back.CYAN}{Fore.BLACK}                  TIKTOK VIDEO DOWNLOADER                  {Style.RESET_ALL}{Fore.CYAN}║{Style.RESET_ALL}")
-    print(" " * padding + f"{Fore.CYAN}║{Style.RESET_ALL}{' ' * 58}{Fore.CYAN}║{Style.RESET_ALL}")
-    print(" " * padding + f"{Fore.CYAN}║{Style.RESET_ALL}{Fore.GREEN}  ▶ Tải video TikTok không có watermark{' ' * 23}{Fore.CYAN}║{Style.RESET_ALL}")
-    print(" " * padding + f"{Fore.CYAN}║{Style.RESET_ALL}{Fore.YELLOW}  ▶ Nhiều nguồn API để đảm bảo độ tin cậy{' ' * 19}{Fore.CYAN}║{Style.RESET_ALL}")
-    print(" " * padding + f"{Fore.CYAN}║{Style.RESET_ALL}{Fore.MAGENTA}  ▶ Hỗ trợ tất cả các loại URL TikTok{' ' * 24}{Fore.CYAN}║{Style.RESET_ALL}")
-    print(" " * padding + f"{Fore.CYAN}║{Style.RESET_ALL}{' ' * 58}{Fore.CYAN}║{Style.RESET_ALL}")
+    print_modern_logo()
     
     # Hiển thị phiên bản
     try:
@@ -34,261 +63,476 @@ def print_banner():
             from tiktok_downloader import __version__
         except:
             __version__ = "1.2.2"
-            
-    version_str = f"v{__version__}"
-    print(" " * padding + f"{Fore.CYAN}║{Style.RESET_ALL}{Fore.WHITE}  Phiên bản: {Fore.GREEN}{version_str}{' ' * (45 - len(version_str))}{Fore.CYAN}║{Style.RESET_ALL}")
-    print(" " * padding + f"{Fore.CYAN}║{Style.RESET_ALL}{Fore.WHITE}  Tác giả: {Fore.GREEN}toihoccode1405{' ' * 32}{Fore.CYAN}║{Style.RESET_ALL}")
-    print(" " * padding + f"{Fore.CYAN}╚{'═' * 58}╝{Style.RESET_ALL}\n")
+    
+    # Thông tin phần mềm
+    print(center_text(f"{Fore.CYAN}● Tải video TikTok không có watermark{Style.RESET_ALL}", terminal_width))
+    print(center_text(f"{Fore.YELLOW}● Nhiều nguồn API để đảm bảo độ tin cậy{Style.RESET_ALL}", terminal_width))
+    print(center_text(f"{Fore.MAGENTA}● Hỗ trợ tất cả các loại URL TikTok{Style.RESET_ALL}", terminal_width))
+    print("\n")
+    
+    version_str = f"{__version__}"
+    author_str = "toihoccode1405"
+    info_text = f"{Fore.WHITE}Phiên bản: {Fore.GREEN}v{version_str}{Fore.WHITE} | Tác giả: {Fore.GREEN}{author_str}{Style.RESET_ALL}"
+    print(center_text(info_text, terminal_width))
+    print("\n")
 
 def show_interactive_menu():
-    """Hiển thị menu tương tác trực quan"""
+    """Hiển thị menu tương tác với thiết kế hiện đại"""
     downloader = TikTokDownloader()
+    terminal_width = get_terminal_width()
     
     while True:
         clear_screen()
         print_banner()
         
-        print(f"{Fore.CYAN}╔{'═' * 58}╗{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}║{Style.RESET_ALL}{Back.CYAN}{Fore.BLACK}                       MENU CHÍNH                       {Style.RESET_ALL}{Fore.CYAN}║{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}╠{'═' * 58}╣{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.GREEN}1.{Style.RESET_ALL} Tải video TikTok{' ' * 38}{Fore.CYAN}║{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.GREEN}2.{Style.RESET_ALL} Xem lịch sử tải xuống{' ' * 34}{Fore.CYAN}║{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.GREEN}3.{Style.RESET_ALL} Xuất lịch sử ra file{' ' * 35}{Fore.CYAN}║{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.GREEN}4.{Style.RESET_ALL} Xóa lịch sử tải xuống{' ' * 34}{Fore.CYAN}║{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.GREEN}5.{Style.RESET_ALL} Kiểm tra cập nhật{' ' * 37}{Fore.CYAN}║{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.GREEN}0.{Style.RESET_ALL} Thoát{' ' * 51}{Fore.CYAN}║{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}╚{'═' * 58}╝{Style.RESET_ALL}\n")
+        # Menu chính với thiết kế hiện đại
+        menu_title = f"{Fore.WHITE}━━━━━━━━━━━━━━━━ {Fore.CYAN}MENU CHÍNH{Fore.WHITE} ━━━━━━━━━━━━━━━━{Style.RESET_ALL}"
+        print(center_text(menu_title, terminal_width))
+        print("\n")
+        
+        menu_items = [
+            f"{Fore.GREEN}1. {Fore.WHITE}Tải video TikTok{Style.RESET_ALL}",
+            f"{Fore.GREEN}1.1 {Fore.WHITE}Tải nhiều video cùng lúc{Style.RESET_ALL}",
+            f"{Fore.GREEN}2. {Fore.WHITE}Xem lịch sử tải xuống{Style.RESET_ALL}",
+            f"{Fore.GREEN}3. {Fore.WHITE}Xuất lịch sử ra file{Style.RESET_ALL}",
+            f"{Fore.GREEN}4. {Fore.WHITE}Xóa lịch sử tải xuống{Style.RESET_ALL}",
+            f"{Fore.GREEN}5. {Fore.WHITE}Kiểm tra cập nhật{Style.RESET_ALL}",
+            f"{Fore.RED}0. {Fore.WHITE}Thoát{Style.RESET_ALL}"
+        ]
+        
+        for item in menu_items:
+            print(center_text(item, terminal_width))
+        
+        print("\n")
+        print(center_text(f"{Fore.YELLOW}❯❯❯{Style.RESET_ALL}", terminal_width))
         
         try:
-            choice = input(f"{Fore.GREEN}Chọn chức năng (0-5): {Style.RESET_ALL}")
+            choice = input(center_text(f"{Fore.GREEN}Chọn chức năng (0-5): {Style.RESET_ALL}", terminal_width, fill_char=''))
             
             if choice == '0':
                 clear_screen()
-                print(f"\n{Fore.CYAN}Cảm ơn bạn đã sử dụng TikTok Downloader!{Style.RESET_ALL}")
-                print(f"{Fore.YELLOW}Tạm biệt và hẹn gặp lại!{Style.RESET_ALL}\n")
+                print("\n\n")
+                print(center_text(f"{Fore.CYAN}Cảm ơn bạn đã sử dụng TikTok Downloader!{Style.RESET_ALL}", terminal_width))
+                print(center_text(f"{Fore.YELLOW}Tạm biệt và hẹn gặp lại!{Style.RESET_ALL}", terminal_width))
+                print("\n\n")
                 break
                 
             elif choice == '1':
                 download_video_interactive(downloader)
                 
+            elif choice == '1.1':
+                batch_download_interactive(downloader)
+
             elif choice == '2':
-                clear_screen()
-                print(f"\n{Fore.CYAN}╔{'═' * 58}╗{Style.RESET_ALL}")
-                print(f"{Fore.CYAN}║{Style.RESET_ALL}{Back.CYAN}{Fore.BLACK}                   LỊCH SỬ TẢI XUỐNG                   {Style.RESET_ALL}{Fore.CYAN}║{Style.RESET_ALL}")
-                print(f"{Fore.CYAN}╚{'═' * 58}╝{Style.RESET_ALL}\n")
-                downloader.show_history()
-                input(f"\n{Fore.YELLOW}Nhấn Enter để quay lại menu chính...{Style.RESET_ALL}")
+                show_history_interactive(downloader)
                 
             elif choice == '3':
                 export_history_interactive(downloader)
                 
             elif choice == '4':
-                clear_screen()
-                print(f"\n{Fore.CYAN}╔{'═' * 58}╗{Style.RESET_ALL}")
-                print(f"{Fore.CYAN}║{Style.RESET_ALL}{Back.CYAN}{Fore.BLACK}                    XÓA LỊCH SỬ                        {Style.RESET_ALL}{Fore.CYAN}║{Style.RESET_ALL}")
-                print(f"{Fore.CYAN}╚{'═' * 58}╝{Style.RESET_ALL}\n")
-                confirm = input(f"{Fore.RED}Bạn có chắc chắn muốn xóa tất cả lịch sử? (y/n): {Style.RESET_ALL}")
-                if confirm.lower() == 'y':
-                    downloader.download_history = []
-                    downloader.save_history()
-                    print(f"\n{Fore.GREEN}Đã xóa lịch sử tải xuống thành công!{Style.RESET_ALL}")
-                    time.sleep(2)
+                clear_history_interactive(downloader)
                 
             elif choice == '5':
                 check_updates_interactive()
                 
             else:
-                print(f"{Fore.RED}Lỗi: Tùy chọn không hợp lệ!{Style.RESET_ALL}")
+                print(center_text(f"{Fore.RED}Lỗi: Tùy chọn không hợp lệ!{Style.RESET_ALL}", terminal_width))
                 time.sleep(1)
                 
         except Exception as e:
-            print(f"{Fore.RED}Lỗi: {e}{Style.RESET_ALL}")
-            input(f"\n{Fore.YELLOW}Nhấn Enter để tiếp tục...{Style.RESET_ALL}")
+            print(center_text(f"{Fore.RED}Lỗi: {e}{Style.RESET_ALL}", terminal_width))
+            input(center_text(f"{Fore.YELLOW}Nhấn Enter để tiếp tục...{Style.RESET_ALL}", terminal_width, fill_char=''))
+
+def show_history_interactive(downloader):
+    """Hiển thị lịch sử tải xuống với UI hiện đại"""
+    terminal_width = get_terminal_width()
+    
+    clear_screen()
+    print("\n")
+    title = f"{Fore.WHITE}━━━━━━━━━━━━━━━━ {Fore.CYAN}LỊCH SỬ TẢI XUỐNG{Fore.WHITE} ━━━━━━━━━━━━━━━━{Style.RESET_ALL}"
+    print(center_text(title, terminal_width))
+    print("\n")
+    
+    downloader.show_history()
+    print("\n")
+    input(center_text(f"{Fore.YELLOW}[Nhấn Enter để quay lại menu chính]{Style.RESET_ALL}", terminal_width, fill_char=''))
+
+def clear_history_interactive(downloader):
+    """Xóa lịch sử tải xuống với UI hiện đại"""
+    terminal_width = get_terminal_width()
+    
+    clear_screen()
+    print("\n")
+    title = f"{Fore.WHITE}━━━━━━━━━━━━━━━━ {Fore.CYAN}XÓA LỊCH SỬ{Fore.WHITE} ━━━━━━━━━━━━━━━━{Style.RESET_ALL}"
+    print(center_text(title, terminal_width))
+    print("\n")
+    
+    warning = f"{Fore.RED}⚠ CẢNH BÁO: Hành động này không thể hoàn tác!{Style.RESET_ALL}"
+    print(center_text(warning, terminal_width))
+    print("\n")
+    
+    confirm = input(center_text(f"{Fore.YELLOW}Bạn có chắc chắn muốn xóa tất cả lịch sử? (y/n): {Style.RESET_ALL}", terminal_width, fill_char=''))
+    if confirm.lower() == 'y':
+        downloader.download_history = []
+        downloader.save_history()
+        print("\n")
+        success = f"{Fore.GREEN}✅ Đã xóa lịch sử tải xuống thành công!{Style.RESET_ALL}"
+        print(center_text(success, terminal_width))
+        time.sleep(2)
+    else:
+        print("\n")
+        cancel = f"{Fore.YELLOW}⚪ Đã hủy thao tác xóa lịch sử.{Style.RESET_ALL}"
+        print(center_text(cancel, terminal_width))
+        time.sleep(2)
 
 def download_video_interactive(downloader):
-    """Giao diện tương tác để tải video"""
+    """Giao diện tương tác để tải video với UI hiện đại"""
+    terminal_width = get_terminal_width()
+    
     while True:
         clear_screen()
-        print(f"\n{Fore.CYAN}╔{'═' * 58}╗{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}║{Style.RESET_ALL}{Back.CYAN}{Fore.BLACK}                   TẢI VIDEO TIKTOK                    {Style.RESET_ALL}{Fore.CYAN}║{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}╚{'═' * 58}╝{Style.RESET_ALL}\n")
+        print("\n")
+        title = f"{Fore.WHITE}━━━━━━━━━━━━━━━━ {Fore.CYAN}TẢI VIDEO TIKTOK{Fore.WHITE} ━━━━━━━━━━━━━━━━{Style.RESET_ALL}"
+        print(center_text(title, terminal_width))
+        print("\n")
         
-        url = input(f"{Fore.YELLOW}Nhập URL video TikTok {Fore.CYAN}(nhập 'q' để quay lại menu){Fore.YELLOW}: {Style.RESET_ALL}")
+        url_prompt = f"{Fore.YELLOW}Nhập URL video TikTok {Fore.CYAN}(nhập 'q' để quay lại menu){Fore.YELLOW}: {Style.RESET_ALL}"
+        url = input(center_text(url_prompt, terminal_width, fill_char=''))
         
         if url.lower() == 'q':
             break
             
         if not url:
-            print(f"{Fore.RED}Lỗi: URL không được để trống!{Style.RESET_ALL}")
+            print("\n")
+            error = f"{Fore.RED}⛔ Lỗi: URL không được để trống!{Style.RESET_ALL}"
+            print(center_text(error, terminal_width))
             time.sleep(1.5)
             continue
-            
-        print(f"\n{Fore.CYAN}Chọn chất lượng video:{Style.RESET_ALL}")
-        print(f"  {Fore.GREEN}1.{Style.RESET_ALL} Cao (HD)")
-        print(f"  {Fore.GREEN}2.{Style.RESET_ALL} Trung bình")
-        quality_choice = input(f"\n{Fore.YELLOW}Chọn chất lượng (1-2): {Style.RESET_ALL}")
+        
+        print("\n")    
+        quality_title = f"{Fore.CYAN}Chọn chất lượng video:{Style.RESET_ALL}"
+        print(center_text(quality_title, terminal_width))
+        print(center_text(f"{Fore.GREEN}1. {Fore.WHITE}Cao (HD){Style.RESET_ALL}", terminal_width))
+        print(center_text(f"{Fore.GREEN}2. {Fore.WHITE}Trung bình{Style.RESET_ALL}", terminal_width))
+        print("\n")
+        
+        quality_choice = input(center_text(f"{Fore.YELLOW}Chọn chất lượng (1-2): {Style.RESET_ALL}", terminal_width, fill_char=''))
         
         quality = "high" if quality_choice != "2" else "medium"
         
-        # Hiển thị animation hoặc thanh tiến trình
-        print(f"\n{Fore.CYAN}Đang xử lý yêu cầu tải xuống...{Style.RESET_ALL}")
+        # Hiển thị animation tải xuống
+        print("\n")
+        loading_text = f"{Fore.CYAN}Đang xử lý yêu cầu tải xuống...{Style.RESET_ALL}"
+        print(center_text(loading_text, terminal_width))
+        
+        for _ in range(3):
+            sys.stdout.write(center_text(f"{Fore.CYAN}. {Style.RESET_ALL}", terminal_width, fill_char=''))
+            sys.stdout.flush()
+            time.sleep(0.5)
+        print("\n")
         
         # Tải video
         success = downloader.download_video(url, quality)
         
         if success:
-            print(f"\n{Fore.GREEN}┌{'─' * 58}┐{Style.RESET_ALL}")
-            print(f"{Fore.GREEN}│{Back.GREEN}{Fore.BLACK}              TẢI XUỐNG THÀNH CÔNG!                   {Style.RESET_ALL}{Fore.GREEN}│{Style.RESET_ALL}")
-            print(f"{Fore.GREEN}└{'─' * 58}┘{Style.RESET_ALL}")
-
-            print(f"\n{Fore.YELLOW}Lưu ý: Nếu video vẫn có watermark, có thể nó đã được nhúng{Style.RESET_ALL}")
-            print(f"{Fore.YELLOW}trực tiếp trong nội dung bởi người tạo, không phải lỗi của phần mềm.{Style.RESET_ALL}")
+            print("\n")
+            success_icon = f"{Fore.GREEN}✅ TẢI XUỐNG THÀNH CÔNG!{Style.RESET_ALL}"
+            print(center_text(success_icon, terminal_width))
+            print("\n")
+            note_line1 = f"{Fore.YELLOW}Lưu ý: Nếu video vẫn có watermark, có thể nó đã được nhúng{Style.RESET_ALL}"
+            note_line2 = f"{Fore.YELLOW}trực tiếp trong nội dung bởi người tạo, không phải lỗi của phần mềm.{Style.RESET_ALL}"
+            print(center_text(note_line1, terminal_width))
+            print(center_text(note_line2, terminal_width))
         else:
-            print(f"\n{Fore.RED}┌{'─' * 58}┐{Style.RESET_ALL}")
-            print(f"{Fore.RED}│{Back.RED}{Fore.WHITE}              TẢI XUỐNG THẤT BẠI!                     {Style.RESET_ALL}{Fore.RED}│{Style.RESET_ALL}")
-            print(f"{Fore.RED}│{' ' * 58}│{Style.RESET_ALL}")
-            print(f"{Fore.RED}│  {Fore.YELLOW}Vui lòng kiểm tra lại URL hoặc thử lại sau.{' ' * 16}{Fore.RED}│{Style.RESET_ALL}")
-            print(f"{Fore.RED}└{'─' * 58}┘{Style.RESET_ALL}")
+            print("\n")
+            error_icon = f"{Fore.RED}❌ TẢI XUỐNG THẤT BẠI!{Style.RESET_ALL}"
+            print(center_text(error_icon, terminal_width))
+            print("\n")
+            error_note = f"{Fore.YELLOW}Vui lòng kiểm tra lại URL hoặc thử lại sau.{Style.RESET_ALL}"
+            print(center_text(error_note, terminal_width))
         
-        input(f"\n{Fore.YELLOW}Nhấn Enter để tiếp tục...{Style.RESET_ALL}")
+        print("\n")
+        input(center_text(f"{Fore.YELLOW}[Nhấn Enter để tiếp tục...]{Style.RESET_ALL}", terminal_width, fill_char=''))
 
 def export_history_interactive(downloader):
-    """Giao diện tương tác để xuất lịch sử"""
-    clear_screen()
-    print(f"\n{Fore.CYAN}╔{'═' * 58}╗{Style.RESET_ALL}")
-    print(f"{Fore.CYAN}║{Style.RESET_ALL}{Back.CYAN}{Fore.BLACK}                XUẤT LỊCH SỬ TẢI XUỐNG                {Style.RESET_ALL}{Fore.CYAN}║{Style.RESET_ALL}")
-    print(f"{Fore.CYAN}╚{'═' * 58}╝{Style.RESET_ALL}\n")
+    """Giao diện tương tác để xuất lịch sử với UI hiện đại"""
+    terminal_width = get_terminal_width()
     
-    print(f"{Fore.CYAN}Chọn định dạng xuất:{Style.RESET_ALL}")
-    print(f"  {Fore.GREEN}1.{Style.RESET_ALL} Văn bản (TXT)")
-    print(f"  {Fore.GREEN}2.{Style.RESET_ALL} Bảng tính (CSV)")
-    choice = input(f"\n{Fore.YELLOW}Chọn định dạng (1-2): {Style.RESET_ALL}")
+    clear_screen()
+    print("\n")
+    title = f"{Fore.WHITE}━━━━━━━━━━━━━━━━ {Fore.CYAN}XUẤT LỊCH SỬ TẢI XUỐNG{Fore.WHITE} ━━━━━━━━━━━━━━━━{Style.RESET_ALL}"
+    print(center_text(title, terminal_width))
+    print("\n")
+    
+    format_title = f"{Fore.CYAN}Chọn định dạng xuất:{Style.RESET_ALL}"
+    print(center_text(format_title, terminal_width))
+    print(center_text(f"{Fore.GREEN}1. {Fore.WHITE}Văn bản (TXT){Style.RESET_ALL}", terminal_width))
+    print(center_text(f"{Fore.GREEN}2. {Fore.WHITE}Bảng tính (CSV){Style.RESET_ALL}", terminal_width))
+    print("\n")
+    
+    choice = input(center_text(f"{Fore.YELLOW}Chọn định dạng (1-2): {Style.RESET_ALL}", terminal_width, fill_char=''))
     
     format_type = "txt" if choice != "2" else "csv"
+    
+    # Hiển thị animation xử lý
+    print("\n")
+    processing = f"{Fore.CYAN}Đang xử lý...{Style.RESET_ALL}"
+    print(center_text(processing, terminal_width))
+    time.sleep(1)
     
     success = downloader.export_history(format_type)
     
     if success:
-        print(f"\n{Fore.GREEN}Xuất lịch sử thành công!{Style.RESET_ALL}")
+        print("\n")
+        success_msg = f"{Fore.GREEN}✅ Xuất lịch sử thành công!{Style.RESET_ALL}"
+        print(center_text(success_msg, terminal_width))
     else:
-        print(f"\n{Fore.RED}Không thể xuất lịch sử. Vui lòng thử lại sau.{Style.RESET_ALL}")
-        
-    input(f"\n{Fore.YELLOW}Nhấn Enter để quay lại menu chính...{Style.RESET_ALL}")
+        print("\n")
+        error_msg = f"{Fore.RED}❌ Không thể xuất lịch sử. Vui lòng thử lại sau.{Style.RESET_ALL}"
+        print(center_text(error_msg, terminal_width))
+    
+    print("\n")    
+    input(center_text(f"{Fore.YELLOW}[Nhấn Enter để quay lại menu chính...]{Style.RESET_ALL}", terminal_width, fill_char=''))
 
 def check_updates_interactive():
-    """Giao diện tương tác để kiểm tra cập nhật"""
+    """Giao diện tương tác để kiểm tra cập nhật với UI hiện đại"""
+    terminal_width = get_terminal_width()
+    
     clear_screen()
-    print(f"\n{Fore.CYAN}╔{'═' * 58}╗{Style.RESET_ALL}")
-    print(f"{Fore.CYAN}║{Style.RESET_ALL}{Back.CYAN}{Fore.BLACK}                   KIỂM TRA CẬP NHẬT                  {Style.RESET_ALL}{Fore.CYAN}║{Style.RESET_ALL}")
-    print(f"{Fore.CYAN}╚{'═' * 58}╝{Style.RESET_ALL}\n")
+    print("\n")
+    title = f"{Fore.WHITE}━━━━━━━━━━━━━━━━ {Fore.CYAN}KIỂM TRA CẬP NHẬT{Fore.WHITE} ━━━━━━━━━━━━━━━━{Style.RESET_ALL}"
+    print(center_text(title, terminal_width))
+    print("\n")
     
-    print(f"{Fore.YELLOW}Đang kiểm tra cập nhật từ máy chủ...{Style.RESET_ALL}")
+    checking = f"{Fore.YELLOW}Đang kiểm tra cập nhật từ máy chủ...{Style.RESET_ALL}"
+    print(center_text(checking, terminal_width))
     
-    # Tạo hiệu ứng đang tải
-    for _ in range(3):
-        sys.stdout.write(f"{Fore.CYAN}.{Style.RESET_ALL}")
+    # Tạo hiệu ứng đang tải đẹp hơn
+    loader = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"]
+    for i in range(8):
+        sys.stdout.write(center_text(f"\r{Fore.CYAN}{loader[i]}{Style.RESET_ALL}", terminal_width, fill_char=''))
         sys.stdout.flush()
-        time.sleep(0.5)
+        time.sleep(0.2)
     print("\n")
     
     updater = Updater()
     has_update, latest_version = updater.check_for_updates()
     
     if has_update:
-        print(f"{Fore.GREEN}┌{'─' * 58}┐{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}│{Back.GREEN}{Fore.BLACK}            CÓ PHIÊN BẢN MỚI KHẢ DỤNG!                {Style.RESET_ALL}{Fore.GREEN}│{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}│{' ' * 58}│{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}│  {Fore.WHITE}Phiên bản hiện tại: {Fore.YELLOW}{updater.current_version}{' ' * 30}{Fore.GREEN}│{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}│  {Fore.WHITE}Phiên bản mới: {Fore.YELLOW}{latest_version}{' ' * 35}{Fore.GREEN}│{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}└{'─' * 58}┘{Style.RESET_ALL}")
+        print("\n")
+        update_available = f"{Fore.GREEN}🔔 CÓ PHIÊN BẢN MỚI KHẢ DỤNG!{Style.RESET_ALL}"
+        print(center_text(update_available, terminal_width))
+        print("\n")
         
-        print(f"\n{Fore.CYAN}Bạn có muốn cập nhật ngay bây giờ không?{Style.RESET_ALL}")
-        update_choice = input(f"{Fore.YELLOW}Cập nhật ngay (y/n): {Style.RESET_ALL}")
+        current_ver = f"{Fore.WHITE}Phiên bản hiện tại: {Fore.YELLOW}{updater.current_version}{Style.RESET_ALL}"
+        new_ver = f"{Fore.WHITE}Phiên bản mới: {Fore.YELLOW}{latest_version}{Style.RESET_ALL}"
+        print(center_text(current_ver, terminal_width))
+        print(center_text(new_ver, terminal_width))
+        
+        print("\n")
+        update_prompt = f"{Fore.CYAN}Bạn có muốn cập nhật ngay bây giờ không?{Style.RESET_ALL}"
+        print(center_text(update_prompt, terminal_width))
+        print("\n")
+        
+        update_choice = input(center_text(f"{Fore.YELLOW}Cập nhật ngay (y/n): {Style.RESET_ALL}", terminal_width, fill_char=''))
         
         if update_choice.lower() == 'y':
-            print(f"\n{Fore.CYAN}Đang cập nhật...{Style.RESET_ALL}")
+            print("\n")
+            updating = f"{Fore.CYAN}Đang cập nhật...{Style.RESET_ALL}"
+            print(center_text(updating, terminal_width))
+            
+            # Animation cập nhật
+            for i in range(10):
+                bar = "█" * i + "░" * (10 - i)
+                percent = i * 10
+                sys.stdout.write(center_text(f"\r{Fore.CYAN}[{bar}] {percent}%{Style.RESET_ALL}", terminal_width, fill_char=''))
+                sys.stdout.flush()
+                time.sleep(0.3)
+            print("\n")
+            
             success = updater.perform_update()
             
             if success:
-                print(f"\n{Fore.GREEN}Cập nhật thành công! Vui lòng khởi động lại ứng dụng.{Style.RESET_ALL}")
+                print("\n")
+                update_success = f"{Fore.GREEN}✅ Cập nhật thành công! Vui lòng khởi động lại ứng dụng.{Style.RESET_ALL}"
+                print(center_text(update_success, terminal_width))
             else:
-                print(f"\n{Fore.RED}Cập nhật thất bại. Vui lòng thử lại sau.{Style.RESET_ALL}")
+                print("\n")
+                update_failed = f"{Fore.RED}❌ Cập nhật thất bại. Vui lòng thử lại sau.{Style.RESET_ALL}"
+                print(center_text(update_failed, terminal_width))
     else:
-        print(f"{Fore.GREEN}┌{'─' * 58}┐{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}│{Back.GREEN}{Fore.BLACK}          BẠN ĐANG SỬ DỤNG PHIÊN BẢN MỚI NHẤT!        {Style.RESET_ALL}{Fore.GREEN}│{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}│{' ' * 58}│{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}│  {Fore.WHITE}Phiên bản hiện tại: {Fore.YELLOW}{updater.current_version}{' ' * 30}{Fore.GREEN}│{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}└{'─' * 58}┘{Style.RESET_ALL}")
+        print("\n")
+        latest_ver = f"{Fore.GREEN}✓ BẠN ĐANG SỬ DỤNG PHIÊN BẢN MỚI NHẤT!{Style.RESET_ALL}"
+        print(center_text(latest_ver, terminal_width))
+        print("\n")
+        
+        current_ver = f"{Fore.WHITE}Phiên bản hiện tại: {Fore.YELLOW}{updater.current_version}{Style.RESET_ALL}"
+        print(center_text(current_ver, terminal_width))
     
-    input(f"\n{Fore.YELLOW}Nhấn Enter để quay lại menu chính...{Style.RESET_ALL}")
+    print("\n")
+    input(center_text(f"{Fore.YELLOW}[Nhấn Enter để quay lại menu chính...]{Style.RESET_ALL}", terminal_width, fill_char=''))
 
-def run_cli():
-    """Điểm vào chính của ứng dụng command-line"""
-    # Khởi tạo colorama
-    init(autoreset=True)
+def batch_download_interactive(downloader):
+    """Giao diện tương tác tải nhiều video cùng lúc"""
+    terminal_width = get_terminal_width()
+    clear_screen()
+    print("\n")
+    title = f"{Fore.WHITE}━━━━━━━━━━━━━━━━ {Fore.CYAN}TẢI NHIỀU VIDEO{Fore.WHITE} ━━━━━━━━━━━━━━━━{Style.RESET_ALL}"
+    print(center_text(title, terminal_width))
+    print("\n")
     
-    # Khởi tạo parser
-    parser = argparse.ArgumentParser(description="Tải video TikTok không có watermark")
-    parser.add_argument('url', nargs='?', help='URL video TikTok cần tải xuống')
-    parser.add_argument('-q', '--quality', choices=['high', 'medium'], default='high',
-                       help='Chất lượng video (high hoặc medium)')
-    parser.add_argument('--history', action='store_true', help='Hiển thị lịch sử tải xuống')
-    parser.add_argument('--clear-history', action='store_true', help='Xóa lịch sử tải xuống')
-    parser.add_argument('--export', choices=['txt', 'csv'], help='Xuất lịch sử ra file (txt hoặc csv)')
-    parser.add_argument('--check-update', action='store_true', help='Kiểm tra bản cập nhật mới')
-    parser.add_argument('--update', action='store_true', help='Cập nhật lên phiên bản mới nhất')
+    info = f"{Fore.YELLOW}Nhập các URL TikTok mỗi URL trên một dòng.{Style.RESET_ALL}"
+    print(center_text(info, terminal_width))
+    print(center_text(f"{Fore.YELLOW}Nhập dòng trống để hoàn tất.{Style.RESET_ALL}", terminal_width))
+    print("\n")
+    
+    urls = []
+    count = 1
+    while True:
+        url = input(center_text(f"{Fore.GREEN}Video {count}: {Style.RESET_ALL}", terminal_width, fill_char=''))
+        if not url:
+            break
+        urls.append(url)
+        count += 1
+    
+    if not urls:
+        print("\n")
+        print(center_text(f"{Fore.RED}Không có URL nào được nhập.{Style.RESET_ALL}", terminal_width))
+        time.sleep(1.5)
+        return
+        
+    print("\n")    
+    quality_title = f"{Fore.CYAN}Chọn chất lượng video:{Style.RESET_ALL}"
+    print(center_text(quality_title, terminal_width))
+    print(center_text(f"{Fore.GREEN}1. {Fore.WHITE}Cao (HD){Style.RESET_ALL}", terminal_width))
+    print(center_text(f"{Fore.GREEN}2. {Fore.WHITE}Trung bình{Style.RESET_ALL}", terminal_width))
+    print("\n")
+    
+    quality_choice = input(center_text(f"{Fore.YELLOW}Chọn chất lượng (1-2): {Style.RESET_ALL}", terminal_width, fill_char=''))
+    quality = "high" if quality_choice != "2" else "medium"
+    
+    # Hiển thị animation tải xuống
+    print("\n")
+    batch_progress = f"{Fore.CYAN}Đang tải {len(urls)} video...{Style.RESET_ALL}"
+    print(center_text(batch_progress, terminal_width))
+    print("\n")
+    
+    success_count = 0
+    fail_count = 0
+    
+    for i, url in enumerate(urls):
+        progress_text = f"{Fore.YELLOW}Đang xử lý video {i+1}/{len(urls)}{Style.RESET_ALL}"
+        print(center_text(progress_text, terminal_width))
+        
+        # Hiển thị URL đang tải
+        short_url = url[:50] + "..." if len(url) > 50 else url
+        url_text = f"{Fore.CYAN}{short_url}{Style.RESET_ALL}"
+        print(center_text(url_text, terminal_width))
+        
+        # Hiển thị animation tiến trình
+        for j in range(5):
+            bar = "█" * j + "░" * (5 - j)
+            sys.stdout.write(center_text(f"\r{Fore.CYAN}[{bar}]{Style.RESET_ALL}", terminal_width, fill_char=''))
+            sys.stdout.flush()
+            time.sleep(0.1)
+        
+        # Tải video
+        success = downloader.download_video(url, quality)
+        
+        if success:
+            success_text = f"{Fore.GREEN}✓ Thành công{Style.RESET_ALL}"
+            print(center_text(success_text, terminal_width))
+            success_count += 1
+        else:
+            fail_text = f"{Fore.RED}✗ Thất bại{Style.RESET_ALL}"
+            print(center_text(fail_text, terminal_width))
+            fail_count += 1
+            
+        print()
+    
+    # Hiển thị kết quả tổng quan
+    print("\n")
+    summary_title = f"{Fore.WHITE}━━━━━━━━━━━━━━━━ {Fore.CYAN}KẾT QUẢ{Fore.WHITE} ━━━━━━━━━━━━━━━━{Style.RESET_ALL}"
+    print(center_text(summary_title, terminal_width))
+    print("\n")
+    
+    total_text = f"{Fore.WHITE}Tổng số video: {Fore.YELLOW}{len(urls)}{Style.RESET_ALL}"
+    success_text = f"{Fore.GREEN}Tải thành công: {success_count}{Style.RESET_ALL}"
+    fail_text = f"{Fore.RED}Tải thất bại: {fail_count}{Style.RESET_ALL}"
+    
+    print(center_text(total_text, terminal_width))
+    print(center_text(success_text, terminal_width))
+    print(center_text(fail_text, terminal_width))
+    
+    print("\n")
+    input(center_text(f"{Fore.YELLOW}[Nhấn Enter để tiếp tục...]{Style.RESET_ALL}", terminal_width, fill_char=''))
+
+# Các hàm run_cli() và main() giữ nguyên như trước
+def run_cli():
+    """Chạy ứng dụng dòng lệnh"""
+    parser = argparse.ArgumentParser(description='TikTok Video Downloader')
+    parser.add_argument('--url', help='URL của video TikTok cần tải')
+    parser.add_argument('--quality', choices=['high', 'medium'], default='high', 
+                      help='Chất lượng video (mặc định: high)')
     parser.add_argument('--menu', action='store_true', help='Hiển thị menu tương tác')
+    parser.add_argument('--version', action='store_true', help='Hiển thị phiên bản')
+    parser.add_argument('--export', choices=['txt', 'csv'], help='Xuất lịch sử tải xuống')
     
     args = parser.parse_args()
     
-    # Kiểm tra cập nhật tự động theo định kỳ
-    updater = Updater()
-    updater.check_for_updates(auto_update=False)
+    # Khởi tạo colorama
+    init()
     
-    # Xử lý các tùy chọn dòng lệnh
-    if args.check_update or args.update:
-        if args.update:
-            updater.perform_update()
-            return
-        else:
-            has_update, latest_version = updater.check_for_updates()
-            if not has_update:
-                print(f"{Fore.GREEN}Bạn đang sử dụng phiên bản mới nhất ({updater.current_version}).{Style.RESET_ALL}")
-            return
-    
-    # Khởi tạo downloader
-    downloader = TikTokDownloader()
-    
-    if args.history:
-        print(f"\n{Fore.CYAN}╔{'═' * 58}╗{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}║{Style.RESET_ALL}{Back.CYAN}{Fore.BLACK}                   LỊCH SỬ TẢI XUỐNG                   {Style.RESET_ALL}{Fore.CYAN}║{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}╚{'═' * 58}╝{Style.RESET_ALL}\n")
-        downloader.show_history()
+    if args.version:
+        try:
+            from .. import __version__
+        except:
+            try:
+                from tiktok_downloader import __version__
+            except:
+                __version__ = "1.2.2"
+                
+        print(f"TikTok Downloader v{__version__}")
         return
         
-    if args.clear_history:
-        if input(f"{Fore.RED}Bạn có chắc chắn muốn xóa tất cả lịch sử? (y/n): {Style.RESET_ALL}").lower() == 'y':
-            downloader.download_history = []
-            downloader.save_history()
-            print(f"{Fore.GREEN}Đã xóa lịch sử tải xuống.{Style.RESET_ALL}")
-        return
-    
-    if args.export:
-        print(f"\n{Fore.CYAN}Đang xuất lịch sử ra file {args.export.upper()}...{Style.RESET_ALL}")
-        downloader.export_history(args.export)
-        return
-    
-    # Hiển thị menu tương tác nếu được yêu cầu hoặc không có URL
-    if args.menu or not args.url:
+    elif args.menu or len(sys.argv) == 1:
+        # Chế độ menu tương tác
         show_interactive_menu()
         return
         
-    # Nếu URL được cung cấp, tiến hành tải video
-    success = downloader.download_video(args.url, args.quality)
-    if success:
-        print(f"{Fore.GREEN}Tải xuống thành công!{Style.RESET_ALL}")
-    else:
-        print(f"{Fore.RED}Tải xuống không thành công. Vui lòng thử lại sau.{Style.RESET_ALL}")
+    # Xử lý các tham số command line khác
+    downloader = TikTokDownloader()
+    
+    if args.export:
+        success = downloader.export_history(args.export)
+        if success:
+            print(f"Đã xuất lịch sử ra file .{args.export}")
+        else:
+            print("Không thể xuất lịch sử.")
+        return
+        
+    if args.url:
+        print(f"Đang tải video từ: {args.url}")
+        print(f"Chất lượng: {args.quality}")
+        success = downloader.download_video(args.url, args.quality)
+        
+        if success:
+            print("Tải xuống thành công!")
+        else:
+            print("Tải xuống thất bại. Vui lòng kiểm tra lại URL hoặc thử lại sau.")
+        return
+    
+    # Nếu không có tham số nào, hiển thị menu
+    show_interactive_menu()
 
+def main():
+    """Hàm main để chạy từ command line"""
+    try:
+        run_cli()
+    except KeyboardInterrupt:
+        print("\nĐã hủy bởi người dùng.")
+    except Exception as e:
+        print(f"Lỗi không mong muốn: {str(e)}")
+        
 if __name__ == "__main__":
-    run_cli()
+    main()

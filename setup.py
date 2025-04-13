@@ -14,6 +14,9 @@ setup(
         'console_scripts': [
             'tiktok-downloader=tiktok_downloader.cli:run_cli',
         ],
+        'gui_scripts': [
+        'tiktok-downloader-gui=tiktok_downloader.gui:main',
+    ],
     },
     author="Toihoccode1405code",
     author_email="toihoccode1405@gmail.com",

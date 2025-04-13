@@ -23,6 +23,10 @@ pip install tiktok-downloader
 ### Dòng lệnh
 
 ```bash
+
+# mở menu 
+python -m tiktok_downloader.cli --menu
+
 # Tải một video
 tiktok-downloader https://www.tiktok.com/@username/video/1234567890
 
